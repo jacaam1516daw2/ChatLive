@@ -10,11 +10,10 @@ block content
     ul#channels
       each channel in channels
         li(class='channel-name')
-          a(href='#') #{channel}
-
+            a.btn(href='#') #{channel}
   #right-column.column
     h2 Messages
     ul#messages
     label(for="new-message") Escribe mensaje:
     textarea#new-message
-    a(id='add-new-message', href='#') Enviar
+    input.btn(id='add-new-message', type='submit', value='Enviar')

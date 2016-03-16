@@ -42,7 +42,31 @@ $(function () {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
                 alert(msg);
             }
+
         });
         return false;
+        refresh();
     });
+
+    function refresh() {
+        $.ajax({
+            url: "/channel/add-message",
+            data: JSON.stringify({
+                name: $('#right-column h2').text(),
+                message: $('#new-message').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('<li>').appendTo('#messages').text(message);
+                $('#new-message').val('');
+                setInterval(refresh, 500);
+            },
+            error: function (err) {
+                var msg = 'Status: ' + err.status + ': ' + err.responseText;
+                alert(msg);
+            }
+        });
+    }
+
 });
