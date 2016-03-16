@@ -31,9 +31,17 @@ exports.addMessage = function (req, res) {
     var channel = _(channels).detect(function (p) {
         return p.name == req.body.name;
     });
-
+    //var fecha = fecha();
     channel.messages.push(req.body.message);
     res.json({
         status: 'ok'
     });
+}
+
+function pad(s) {
+    return (s < 10) ? '0' + s : s;
+}
+
+function fecha() {
+    return [pad(new Date().getDate()), pad(new Date().getMonth() + 1), new Date().getFullYear()].join('/') + ' - ' + [pad(new Date().getHours()), pad(new Date().getMinutes())].join(':');
 }

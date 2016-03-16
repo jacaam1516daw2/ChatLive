@@ -55,6 +55,7 @@ $(function () {
                 name: $('#right-column h2').text(),
                 message: $('#new-message').val()
             }),
+
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
@@ -65,8 +66,7 @@ $(function () {
             error: function (err) {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
                 alert(msg);
-            }
+            },
         });
     }
-
 });
