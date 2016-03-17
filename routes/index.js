@@ -2,13 +2,16 @@ var _ = require('underscore');
 
 var channels = [{
     name: 'Motos',
-    messages: ['']
+    messages: [''],
+    lastMessages: ''
 }, {
     name: 'Coches',
-    messages: ['']
+    messages: [''],
+    lastMessages: ''
 }, {
     name: 'Moviles',
-    messages: ['']
+    messages: [''],
+    lastMessages: ''
 }];
 
 exports.index = function (req, res) {
@@ -35,6 +38,12 @@ exports.addMessage = function (req, res) {
     channel.messages.push(req.body.message);
     res.json({
         status: 'ok'
+    });
+}
+
+exports.refresh = function (req, res) {
+    res.send({
+        sms: 'AJAX'
     });
 }
 
