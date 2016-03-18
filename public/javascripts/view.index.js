@@ -45,12 +45,24 @@ $(function () {
 
         });
         return false;
-        refresh();
     });
 
     setInterval(function () {
-        $.post('/channel/refresh', {}, function (req) {
-            $('<li>').appendTo('#messages').text(req.sms);
+        $.ajax({
+            type: "POST",
+            url: "/channel/refresh",
+            /* data: JSON.stringify({
+                 name: name,
+                 message: message
+             }),*/
+            success: function (data) {
+                $('<li>').appendTo('#messages').text(data.message);
+            },
+            error: function (err) {
+                var msg = 'Status: ' + err.status + ': ' + err.responseText;
+                console.log(msg);
+            }
+
         });
     }, 500);
 });

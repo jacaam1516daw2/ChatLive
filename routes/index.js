@@ -1,5 +1,6 @@
 var _ = require('underscore');
 
+//channels.push({name: "Canal", messages: "", lastMessages: ""});
 var channels = [{
     name: 'Motos',
     messages: [''],
@@ -42,9 +43,11 @@ exports.addMessage = function (req, res) {
 }
 
 exports.refresh = function (req, res) {
-    res.send({
-        sms: 'AJAX'
-    });
+    if (channels[0].messages.length > 0) {
+        res.send({
+            message: channels[0].messages[channels[0].messages.length - 1]
+        });
+    }
 }
 
 function pad(s) {
