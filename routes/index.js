@@ -1,18 +1,12 @@
 var _ = require('underscore');
+var moment = require('moment');
 
-//channels.push({name: "Canal", messages: "", lastMessages: ""});
 var channels = [{
     name: 'Motos',
-    messages: [''],
-    lastMessages: ''
+    messages: ['']
 }, {
     name: 'Coches',
-    messages: [''],
-    lastMessages: ''
-}, {
-    name: 'Moviles',
-    messages: [''],
-    lastMessages: ''
+    messages: ['']
 }];
 
 exports.index = function (req, res) {
@@ -35,8 +29,7 @@ exports.addMessage = function (req, res) {
     var channel = _(channels).detect(function (p) {
         return p.name == req.body.name;
     });
-    //var fecha = fecha();
-    channel.messages.push(req.body.message);
+    channel.messages.push(moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
     res.json({
         status: 'ok'
     });
@@ -48,12 +41,4 @@ exports.refresh = function (req, res) {
             message: channels[0].messages[channels[0].messages.length - 1]
         });
     }
-}
-
-function pad(s) {
-    return (s < 10) ? '0' + s : s;
-}
-
-function fecha() {
-    return [pad(new Date().getDate()), pad(new Date().getMonth() + 1), new Date().getFullYear()].join('/') + ' - ' + [pad(new Date().getHours()), pad(new Date().getMinutes())].join(':');
 }

@@ -1,4 +1,5 @@
 $(function () {
+
     $('#right-column').hide();
 
     $('li.channel-name a').click(function () {
@@ -11,7 +12,9 @@ $(function () {
 
         $.getJSON('/channel/' + name, function (data) {
             for (var i = 0; i < data.length; i++) {
-                $('<li>').appendTo('#messages').text(data[i]);
+                if (data[i] != '') {
+                    $('<li>').appendTo('#messages').text('li.channel-name a' + data[i]);
+                }
             }
         });
 
@@ -30,19 +33,19 @@ $(function () {
             url: "/channel/add-message",
             data: JSON.stringify({
                 name: name,
-                message: message
+                message: message,
+                fecha: 'ADIOS'
             }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                $('<li>').appendTo('#messages').text(message);
+                $('<li>').appendTo('#messages').text('add-new-message ' + message);
                 $('#new-message').val('');
             },
             error: function (err) {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
-                alert(msg);
+                console.log(msg);
             }
-
         });
         return false;
     });
@@ -51,18 +54,20 @@ $(function () {
         $.ajax({
             type: "POST",
             url: "/channel/refresh",
-            /* data: JSON.stringify({
-                 name: name,
-                 message: message
-             }),*/
+            /*  data: JSON.stringify({
+                   name: name,
+                   message: message
+               }),*/
             success: function (data) {
-                $('<li>').appendTo('#messages').text(data.message);
+                if (data.message != '') {
+                    $('<li>').appendTo('#messages').text(data.message);
+                }
             },
             error: function (err) {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
                 console.log(msg);
             }
-
         });
-    }, 500);
+    }, 4000);
+
 });
