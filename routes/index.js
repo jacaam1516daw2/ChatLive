@@ -60,21 +60,18 @@ exports.addMessage = function (req, res) {
         var channel = _(channels).detect(function (p) {
             return p.name == req.body.name;
         });
-        console.log(channel.name);
-        channel.messages.push(moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
+        channel.messages.push(user.userName + ' - ' + moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
         res.json({
             status: 'ok',
-            message: moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message
+            message: user.userName + ' - ' + moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message
         });
     }
 }
 
 exports.refresh = function (req, res) {
     res.send({
-        // message: channels[0].messages[channels[0].messages.length - 1]
         messages: channels[0].messages,
         lastMessage: channels[0].lastMessage,
         channels: channels
     });
-    channels[0].lastMessage = 0;
 }

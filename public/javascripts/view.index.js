@@ -73,7 +73,7 @@ $(function () {
             },
             error: function (err) {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
-                console.log(msg);
+                alert(msg);
             }
         });
         return false;
