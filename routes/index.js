@@ -4,7 +4,8 @@ var moment = require('moment');
 var channels = [{
     name: 'Motos',
     messages: [],
-    users: []
+    users: [],
+    fecha: ''
 }, {
     name: 'Coches',
     messages: [],
@@ -12,7 +13,8 @@ var channels = [{
 }];
 
 var user = [{
-    userName: ''
+    userName: '',
+    canal: -1
 }];
 
 exports.index = function (req, res) {
@@ -49,6 +51,7 @@ exports.channel = function (req, res) {
         if (us < 0) {
             channels[canal].users.push(user.userName);
         }
+        user.canal = canal;
         return p.name == req.params.name;
     }).messages;
     res.json(messages);
@@ -60,6 +63,9 @@ exports.addMessage = function (req, res) {
         var channel = _(channels).detect(function (p) {
             return p.name == req.body.name;
         });
+
+        channel.fecha = moment(Date.now()).format('DD/MM/YYYY - h:mm:ss');
+        user.lastMessage = user.userName + ' - ' + moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message;
         channel.messages.push(user.userName + ' - ' + moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
         res.json({
             status: 'ok',
@@ -69,9 +75,11 @@ exports.addMessage = function (req, res) {
 }
 
 exports.refresh = function (req, res) {
-    res.send({
-        messages: channels[0].messages,
-        lastMessage: channels[0].lastMessage,
-        channels: channels
-    });
+    console.log('refresh');
+    channels[user.canal].fecha = '';
+    if (channels[user.canal].messages[channels[user.canal].messages.length - 1].search(channels[user.canal].fecha)) {
+        res.send({
+            message: channels[user.canal].messages[channels[user.canal].messages.length - 1]
+        });
+    }
 }

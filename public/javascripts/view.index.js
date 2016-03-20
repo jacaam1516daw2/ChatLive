@@ -78,17 +78,15 @@ $(function () {
         });
         return false;
     });
-    /* setInterval(function () {
-     $.ajax({
-         type: "POST",
-         url: "/channel/refresh",
-         success: function (data) {
-             for (var i = 0; i < data.messages.length; i++) {
-                 if (data.messages[i] != '') {
-                     $('<li>').appendTo('#messages').text(data.messages[i]);
-                 }
-             }
-         }
-     });
- }, 3000);*/
+    setInterval(function () {
+        $.ajax({
+            type: "POST",
+            url: "/channel/refresh",
+            success: function (data) {
+                if (data.message != '') {
+                    $('<li>').appendTo('#messages').text(data.message);
+                }
+            }
+        });
+    }, 3000);
 });
