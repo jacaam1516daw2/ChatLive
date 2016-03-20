@@ -1,8 +1,13 @@
 extends layout
 
 block content
-
+  #nick-column.column
+    label() Nick Name:
+    input(type='text', id='add-nick')
+    input.btn(id='add-login', type='submit', value='Login')
   #left-column.column
+    h3
+    br
     h2 Elige tu sala
     ul#channels
       each channel in channels

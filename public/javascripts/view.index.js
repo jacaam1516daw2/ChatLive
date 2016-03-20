@@ -1,4 +1,7 @@
 $(function () {
+    var user = '';
+
+    $('#left-column').hide();
 
     $('#right-column').hide();
 
@@ -13,7 +16,7 @@ $(function () {
         $.getJSON('/channel/' + name, function (data) {
             for (var i = 0; i < data.length; i++) {
                 if (data[i] != '') {
-                    $('<li>').appendTo('#messages').text('li.channel-name a' + data[i]);
+                    $('<li>').appendTo('#messages').text(data[i]);
                 }
             }
         });
@@ -23,24 +26,52 @@ $(function () {
         return false;
     });
 
-    $('#add-new-message').click(function () {
+    $(document).ready(function () {
+        $('input[type="submit"]').prop('disabled', true);
+        $('input[type="text"]').keyup(function () {
+            if ($(this).val() != '') {
+                $('input[type="submit"]').prop('disabled', false);
+            }
+        });
+    });
 
+    $('#add-login').click(function () {
+        user = $('#add-nick').val();
+        $('#nick-column').hide();
+        $('<li>').appendTo('h3').text(user);
+        $('#left-column').show();
+        $.ajax({
+            type: "POST",
+            url: "/channel/login",
+            data: JSON.stringify({
+                nick: user
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                console.log('AJAX')
+            }
+        });
+    });
+
+    $('#add-new-message').click(function () {
         var name = $('#right-column h2').text();
         var message = $('#new-message').val();
-
         $.ajax({
             type: "POST",
             url: "/channel/add-message",
             data: JSON.stringify({
                 name: name,
-                message: message,
-                fecha: 'ADIOS'
+                message: message
             }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
             success: function (data) {
-                $('<li>').appendTo('#messages').text('add-new-message ' + message);
-                $('#new-message').val('');
+                if (message != '') {
+                    var user = $('#add-nick').val();
+                    $('<li>').appendTo('#messages').text(data.message);
+                    $('#new-message').val('');
+                }
             },
             error: function (err) {
                 var msg = 'Status: ' + err.status + ': ' + err.responseText;
@@ -49,25 +80,17 @@ $(function () {
         });
         return false;
     });
-
-    setInterval(function () {
-        $.ajax({
-            type: "POST",
-            url: "/channel/refresh",
-            /*  data: JSON.stringify({
-                   name: name,
-                   message: message
-               }),*/
-            success: function (data) {
-                if (data.message != '') {
-                    $('<li>').appendTo('#messages').text(data.message);
-                }
-            },
-            error: function (err) {
-                var msg = 'Status: ' + err.status + ': ' + err.responseText;
-                console.log(msg);
-            }
-        });
-    }, 4000);
-
+    /* setInterval(function () {
+     $.ajax({
+         type: "POST",
+         url: "/channel/refresh",
+         success: function (data) {
+             for (var i = 0; i < data.messages.length; i++) {
+                 if (data.messages[i] != '') {
+                     $('<li>').appendTo('#messages').text(data.messages[i]);
+                 }
+             }
+         }
+     });
+ }, 3000);*/
 });

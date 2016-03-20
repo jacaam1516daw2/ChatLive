@@ -3,10 +3,16 @@ var moment = require('moment');
 
 var channels = [{
     name: 'Motos',
-    messages: ['']
+    messages: [],
+    users: []
 }, {
     name: 'Coches',
-    messages: ['']
+    messages: [],
+    users: []
+}];
+
+var user = [{
+    userName: ''
 }];
 
 exports.index = function (req, res) {
@@ -18,27 +24,54 @@ exports.index = function (req, res) {
     })
 };
 
+exports.login = function (req, res) {
+    user.userName = req.body.nick;
+    res.json(user);
+}
+
 exports.channel = function (req, res) {
+    var canal = -1;
+    var us = -1;
     var messages = _(channels).detect(function (p) {
+        for (var i = 0; i < channels.length; i++) {
+            if (channels[i].name == req.params.name) {
+                canal = i;
+            }
+        }
+        for (var x = 0; x < channels[canal].users.length; x++) {
+            if (channels[canal].users[x] == user.userName) {
+                us = x;
+            }
+        }
+        if (us < 0) {
+            channels[canal].users.push(user.userName);
+        }
         return p.name == req.params.name;
     }).messages;
     res.json(messages);
 }
 
 exports.addMessage = function (req, res) {
-    var channel = _(channels).detect(function (p) {
-        return p.name == req.body.name;
-    });
-    channel.messages.push(moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
-    res.json({
-        status: 'ok'
-    });
+    console.log('addMessage');
+    if (req.body.message != '') {
+        var channel = _(channels).detect(function (p) {
+            return p.name == req.body.name;
+        });
+        console.log(channel.name);
+        channel.messages.push(moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message);
+        res.json({
+            status: 'ok',
+            message: moment(Date.now()).format('DD/MM/YYYY - h:mm:ss') + ' - ' + req.body.message
+        });
+    }
 }
 
 exports.refresh = function (req, res) {
-    if (channels[0].messages.length > 0) {
-        res.send({
-            message: channels[0].messages[channels[0].messages.length - 1]
-        });
-    }
+    res.send({
+        // message: channels[0].messages[channels[0].messages.length - 1]
+        messages: channels[0].messages,
+        lastMessage: channels[0].lastMessage,
+        channels: channels
+    });
+    channels[0].lastMessage = 0;
 }

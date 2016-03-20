@@ -26,6 +26,7 @@ app.configure('development', function () {
 });
 
 app.get('/', routes.index);
+app.post('/channel/login', routes.login);
 app.get('/channel/:name', routes.channel);
 app.post('/channel/add-message', routes.addMessage);
 app.post('/channel/refresh', routes.refresh);
