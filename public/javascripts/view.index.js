@@ -48,9 +48,7 @@ $(function () {
             }),
             contentType: "application/json; charset=utf-8",
             dataType: "json",
-            success: function (data) {
-                console.log('AJAX')
-            }
+            success: function (data) {}
         });
     });
 

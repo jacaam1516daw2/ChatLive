@@ -16,6 +16,7 @@ var user = [{
 }];
 
 exports.index = function (req, res) {
+    console.log('index');
     var names = channels.map(function (p) {
         return p.name;
     });
@@ -25,11 +26,13 @@ exports.index = function (req, res) {
 };
 
 exports.login = function (req, res) {
+    console.log('login');
     user.userName = req.body.nick;
     res.json(user);
 }
 
 exports.channel = function (req, res) {
+    console.log('channel');
     var canal = -1;
     var us = -1;
     var messages = _(channels).detect(function (p) {
